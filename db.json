@@ -1,0 +1,28 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "First Todo",
+      "description": "This is the first todo item",
+      "completed": true
+    },
+    {
+      "id": 2,
+      "title": "Second Todo",
+      "description": "This is the second todo item",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "title": "Third Todo",
+      "description": "This is the second todo item",
+      "completed": false
+    },
+    {
+      "id": 4,
+      "title": "Fourth Todo",
+      "description": "This is the second todo item",
+      "completed": true
+    }
+  ]
+}
