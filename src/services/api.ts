@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:300/todos';
+const API_URL = 'http://localhost:3000/todos';
 
 type Task = {
   id: number,
