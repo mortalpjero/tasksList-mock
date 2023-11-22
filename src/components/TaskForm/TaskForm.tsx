@@ -125,7 +125,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation }) => {
             clipRule="evenodd"
           />
         </svg>
-        Add new product
+        Add new task
       </button>
     </form>
   )
