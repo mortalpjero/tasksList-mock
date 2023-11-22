@@ -2,7 +2,6 @@ import React from "react";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import TaskAdder from "./components/TaskAdder/TaskAdder";
-import Modal from "./components/Modal/Modal";
 import Divider from "./components/Divider/Divider";
 
 function App() {
