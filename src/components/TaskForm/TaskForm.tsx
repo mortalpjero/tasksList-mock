@@ -12,40 +12,53 @@ type TaskFormProps = {
   type: string;
 };
 
+interface Values {
+  taskTitle: string | undefined;
+  taskDescription: string | undefined;
+  completed: boolean;
+}
+
 const TaskForm: React.FC<TaskFormProps> = ({ validation, type }) => {
   const dispatch = useDispatch();
-  const taskToRename = useSelector((state: RootState) => state.tasksInfo.taskToRename);
-  const genInitialValues = () => {
-    if (type === 'editTask') {
-      return { taskTitle: taskToRename?.title, taskDescription: taskToRename?.description };
+
+  const handleAddChannelSubmit = (values: Values, resetForm: Function) => {
+    if (values.taskTitle && values.taskDescription) {
+      const newTask = {
+        title: values.taskTitle,
+        description: values.taskDescription,
+        completed: false,
+      }
+      createTask(newTask)
+        .then((response) => {
+          dispatch(addTaskToState(response))
+        })
+        .catch((error) => {
+          console.error('Error creating task', error);
+        })
+      resetForm();
     }
-    return { taskTitle: '', taskDescription: '' };
+    else {
+      console.error('Task name or description is not specified');
+    }
+  }
+
+  const taskToRename = useSelector((state: RootState) => state.tasksInfo.taskToRename);
+  const genInitialValues = (): Values => {
+    if (type === 'editTask') {
+      return {
+        taskTitle: taskToRename?.title,
+        taskDescription: taskToRename?.description,
+        completed: taskToRename?.completed || false
+      };
+    }
+    return { taskTitle: '', taskDescription: '', completed: false };
   };
   const initialValues = genInitialValues();
 
   const formik = useFormik({
     initialValues,
     validationSchema: validation,
-    onSubmit: (values, { resetForm }) => {
-      if (values.taskTitle && values.taskDescription) {
-        const newTask = {
-          title: values.taskTitle,
-          description: values.taskDescription,
-          completed: false,
-        }
-        createTask(newTask)
-          .then((response) => {
-            dispatch(addTaskToState(response))
-          })
-          .catch((error) => {
-            console.error('Error creating task', error);
-          })
-        resetForm();
-      }
-      else {
-        console.error('Task name or description is not specified');
-      }
-    }
+    onSubmit: (values, { resetForm }) => handleAddChannelSubmit(values, resetForm),
   })
 
   const { handleChange, handleSubmit, errors, touched } = formik;
