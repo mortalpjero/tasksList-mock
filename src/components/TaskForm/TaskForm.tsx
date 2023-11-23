@@ -1,36 +1,57 @@
 import React from "react";
 import { useFormik } from "formik";
-import { uniqueId } from "lodash";
 import { Schema } from "yup";
+import { RootState } from "../../slices";
 import classNames from "classnames";
+import { useSelector, useDispatch } from "react-redux";
+import { createTask } from "../../services/api";
+import { addTaskToState } from "../../slices/tasksSlice";
 
 type TaskFormProps = {
   validation: Schema<any>;
+  type: string;
 };
 
-const TaskForm: React.FC<TaskFormProps> = ({ validation }) => {
-  const initialValues = {
-    taskName: '',
-    taskDescription: '',
+const TaskForm: React.FC<TaskFormProps> = ({ validation, type }) => {
+  const dispatch = useDispatch();
+  const taskToRename = useSelector((state: RootState) => state.tasksInfo.taskToRename);
+  const genInitialValues = () => {
+    if (type === 'editTask') {
+      return { taskTitle: taskToRename?.title, taskDescription: taskToRename?.description };
+    }
+    return { taskTitle: '', taskDescription: '' };
   };
+  const initialValues = genInitialValues();
 
   const formik = useFormik({
     initialValues,
     validationSchema: validation,
-    onSubmit: (values) => {
-      const newTask = {
-        id: uniqueId(),
-        name: values.taskName,
-        description: values.taskDescription,
+    onSubmit: (values, { resetForm }) => {
+      if (values.taskTitle && values.taskDescription) {
+        const newTask = {
+          title: values.taskTitle,
+          description: values.taskDescription,
+          completed: false,
+        }
+        createTask(newTask)
+          .then((response) => {
+            dispatch(addTaskToState(response))
+          })
+          .catch((error) => {
+            console.error('Error creating task', error);
+          })
+        resetForm();
       }
-      console.log(newTask);
+      else {
+        console.error('Task name or description is not specified');
+      }
     }
   })
 
   const { handleChange, handleSubmit, errors, touched } = formik;
-  const { taskName, taskDescription } = formik.values;
+  const { taskTitle, taskDescription } = formik.values;
 
-  const taskNameClasses = classNames(
+  const taskTitleClasses = classNames(
     'border',
     'border-gray-300',
     'text-gray-900',
@@ -47,7 +68,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation }) => {
     'dark:text-white',
     'dark:focus:ring-primary-500',
     'dark:focus:border-primary-500',
-    touched.taskName && errors.taskName ? 'border-red-200' : 'bg-gray-50',
+    touched.taskTitle && errors.taskTitle ? 'border-red-200' : 'bg-gray-50',
   )
 
   const taskDescriptionClasses = classNames(
@@ -67,7 +88,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation }) => {
     'dark:text-white',
     'dark:focus:ring-blue-500',
     'dark:focus:border-blue-500',
-    touched.taskName && errors.taskName ? 'border-red-200' : 'bg-gray-50',
+    touched.taskTitle && errors.taskTitle ? 'border-red-200' : 'bg-gray-50',
   )
 
   return (
@@ -82,12 +103,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation }) => {
           </label>
           <input
             type="text"
-            name="taskName"
+            name="taskTitle"
             id="name"
-            className={taskNameClasses}
+            className={taskTitleClasses}
             placeholder="Type the name of a task"
             required={true}
-            value={taskName}
+            value={taskTitle}
             onChange={handleChange}
           />
         </div>
