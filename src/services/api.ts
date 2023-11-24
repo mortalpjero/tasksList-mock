@@ -8,10 +8,6 @@ type NewTask = {
   completed: boolean,
 }
 
-type ExistingTask = NewTask & {
-  id: string,
-}
-
 const getTasks = () => {
   return axios.get(API_URL)
     .then((response) => response.data);
@@ -22,13 +18,13 @@ const createTask = (task: NewTask) => {
     .then((response) => response.data);
 };
 
-const updateTask = (task: ExistingTask) => {
-  return axios.put(`${API_URL}/${task.id}`, task)
+const updateTask = (task: NewTask, id: Number) => {
+  return axios.patch(`${API_URL}/${id}`, task)
     .then((response) => response.data);
 };
 
-const deleteTask = (task: ExistingTask) => {
-  return axios.delete(`${API_URL}/${task.id}`)
+const deleteTask = (id: Number) => {
+  return axios.delete(`${API_URL}/${id}`)
     .then((response) => response.data);
 }
 
