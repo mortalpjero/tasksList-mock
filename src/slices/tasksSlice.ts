@@ -10,7 +10,7 @@ type Task = {
 const initialState = {
   tasks: [] as Task[],
   taskToRemove: null as Task | null,
-  taskToRename: null as Task | null,
+  taskToEdit: null as Task | null,
 };
 
 const tasksSlice = createSlice({
@@ -20,23 +20,30 @@ const tasksSlice = createSlice({
     setTasks: (state, action: PayloadAction<Task[]>) => {
       state.tasks = action.payload;
     },
-    setTaskToRemove: (state, action: PayloadAction<Task>) => {
+    setTaskToRemove: (state, action: PayloadAction<Task | null>) => {
       state.taskToRemove = action.payload;
     },
-    setTaskToRename: (state, action: PayloadAction<Task>) => {
-      state.taskToRename = action.payload;
+    setTaskToEdit: (state, action: PayloadAction<Task | null>) => {
+      state.taskToEdit = action.payload;
     },
     addTaskToState: (state, action: PayloadAction<Task>) => {
       state.tasks = [action.payload, ...state.tasks];
     },
-  },
-});
+    updateTaskInState: (state, action: PayloadAction<Task>) => {
+      state.tasks = state.tasks.map((task) =>
+        task.id === action.payload.id ? { ...action.payload } : task
+      );
+    }
+  }
+},
+);
 
 export const {
   setTasks,
   setTaskToRemove,
-  setTaskToRename,
+  setTaskToEdit,
   addTaskToState,
+  updateTaskInState,
 } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
