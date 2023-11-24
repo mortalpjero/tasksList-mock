@@ -4,22 +4,27 @@ import { Schema } from "yup";
 import { RootState } from "../../slices";
 import classNames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
-import { createTask } from "../../services/api";
-import { addTaskToState } from "../../slices/tasksSlice";
+import { createTask, updateTask } from "../../services/api";
+import { addTaskToState, updateTaskInState, setTaskToEdit } from "../../slices/tasksSlice";
+import Button from "../Button/Button";
+import { ReactComponent as AddIcon } from '../../images/add_icon.svg';
+import { ReactComponent as SaveIcon } from '../../images/save_icon.svg';
 
 type TaskFormProps = {
   validation: Schema<any>;
-  type: string;
+  formType: string;
 };
 
 interface Values {
+  id?: number | undefined;
   taskTitle: string | undefined;
   taskDescription: string | undefined;
   completed: boolean;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ validation, type }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   const dispatch = useDispatch();
+  const taskToEdit = useSelector((state: RootState) => state.tasksInfo.taskToEdit);
 
   const handleAddChannelSubmit = (values: Values, resetForm: Function) => {
     if (values.taskTitle && values.taskDescription) {
@@ -42,13 +47,34 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, type }) => {
     }
   }
 
-  const taskToRename = useSelector((state: RootState) => state.tasksInfo.taskToRename);
+  const handleEditChannelSubmit = (values: Values) => {
+    if (values.taskTitle && values.taskDescription && taskToEdit?.id) {
+      const changedTask = {
+        title: values.taskTitle,
+        description: values.taskDescription,
+        completed: false,
+      }
+      updateTask(changedTask, taskToEdit.id)
+        .then((response) => {
+          dispatch(updateTaskInState(response))
+        })
+        .catch((error) => {
+          console.error('Error changing task', error);
+        })
+        dispatch(setTaskToEdit(null));
+    }
+    else {
+      console.error('Task name or description is not specified or task id is missing');
+    }
+  }
+
+
   const genInitialValues = (): Values => {
-    if (type === 'editTask') {
+    if (formType === 'editTask') {
       return {
-        taskTitle: taskToRename?.title,
-        taskDescription: taskToRename?.description,
-        completed: taskToRename?.completed || false
+        taskTitle: taskToEdit?.title,
+        taskDescription: taskToEdit?.description,
+        completed: taskToEdit?.completed || false
       };
     }
     return { taskTitle: '', taskDescription: '', completed: false };
@@ -58,7 +84,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, type }) => {
   const formik = useFormik({
     initialValues,
     validationSchema: validation,
-    onSubmit: (values, { resetForm }) => handleAddChannelSubmit(values, resetForm),
+    onSubmit: (values, { resetForm }) => {
+      if (formType === 'addTask') {
+        return handleAddChannelSubmit(values, resetForm);
+      }
+      if (formType === 'editTask') {
+        return handleEditChannelSubmit(values);
+      }
+      console.error('Unknown Form Format');
+    }
   })
 
   const { handleChange, handleSubmit, errors, touched } = formik;
@@ -142,25 +176,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, type }) => {
             onChange={handleChange}
           />
         </div>
+        {formType === 'addTask' && <Button type='addTask' icon={<AddIcon />}>Add New Task</Button>}
+        {formType === 'editTask' && <Button type='editTask' icon={<SaveIcon />}>Save Changes</Button>}
       </div>
-      <button
-        type="submit"
-        className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
-        <svg
-          className="me-1 -ms-1 w-5 h-5"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            fillRule="evenodd"
-            d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-            clipRule="evenodd"
-          />
-        </svg>
-        Add new task
-      </button>
+      <></>
     </form>
   )
 };
