@@ -10,6 +10,7 @@ import { setTaskToEdit, setNewTitle, setNewDescription } from "../../slices/edit
 import Button from "../Button/Button";
 import { ReactComponent as AddIcon } from '../../images/add_icon.svg';
 import { ReactComponent as SaveIcon } from '../../images/save_icon.svg';
+import Error from "../Error/Error";
 
 type TaskFormProps = {
   validation: Schema<any>;
@@ -29,6 +30,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   const taskToEdit = useSelector((state: RootState) => state.editTaskInfo.taskToEdit);
   const [updatedTitle, setUpdatedTitle] = useState(taskToEdit?.title);
   const [updatedDescription, setUpdatedDescription] = useState(taskToEdit?.description)
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     if (formType === 'editTask') {
@@ -41,6 +45,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
 
   const handleAddChannelSubmit = (values: Values, resetForm: Function) => {
     if (values.taskTitle && values.taskDescription) {
+      setIsLoading(true);
       const newTask = {
         title: values.taskTitle,
         description: values.taskDescription,
@@ -48,11 +53,16 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       }
       createTask(newTask)
         .then((response) => {
-          dispatch(addTaskToState(response))
+          dispatch(addTaskToState(response));
+          setErrorMessage('');
         })
         .catch((error) => {
-          console.error('Error creating task', error);
+          console.log('error create');
+          setErrorMessage(`Error creating task ${error}`);
         })
+        .finally(() => {
+          setIsLoading(false);
+        });
       resetForm();
     }
     else {
@@ -62,6 +72,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
 
   const handleEditChannelSubmit = (values: Values) => {
     if (values.taskTitle && values.taskDescription && taskToEdit?.id) {
+      setIsLoading(true);
       const changedTask = {
         title: values.taskTitle,
         description: values.taskDescription,
@@ -69,10 +80,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       }
       updateTask(changedTask, taskToEdit.id)
         .then((response) => {
-          dispatch(updateTaskInState(response))
+          dispatch(updateTaskInState(response));
+          setErrorMessage('');
         })
         .catch((error) => {
-          console.error('Error changing task', error);
+          console.log('error')
+          setErrorMessage(`Error changing task ${error}`);
+        })
+        .finally(() => {
+          setIsLoading(false);
         })
       dispatch(setTaskToEdit(null));
     }
@@ -148,7 +164,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
     'dark:text-white',
     'dark:focus:ring-blue-500',
     'dark:focus:border-blue-500',
-    touched.taskTitle && errors.taskTitle ? 'border-red-200' : 'bg-gray-50',
+    'overflow-hidden',
+    'overflow-ellipsis',
+    touched.taskDescription && errors.taskDescription ? 'border-red-200' : 'bg-gray-50',
   )
 
   return (
@@ -167,7 +185,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             id="name"
             className={taskTitleClasses}
             placeholder="Type the name of a task"
-            required={true}
             value={taskTitle}
             onChange={(e) => {
               handleChange(e);
@@ -177,6 +194,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             }
             }
           />
+          {errors.taskTitle && touched.taskTitle && <Error text={errors.taskTitle} />}
         </div>
         <div className="col-span-2">
           <label
@@ -200,9 +218,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             }
             }
           />
+          {errors.taskDescription && touched.taskDescription && <Error text={errors.taskDescription} />}
         </div>
-        {formType === 'addTask' && <Button type='addTask' icon={<AddIcon />}>Add New Task</Button>}
-        {formType === 'editTask' && <Button type='editTask' icon={<SaveIcon />}>Save Changes</Button>}
+        <div className="item col-span-full">
+          {errorMessage && <Error text={errorMessage} />}
+        </div>
+        <div>
+          {formType === 'addTask' && <Button type='addTask' icon={<AddIcon />} disabled={isLoading}>Add New Task</Button>}
+          {formType === 'editTask' && <Button type='editTask' icon={<SaveIcon />} disabled={isLoading}>Save Changes</Button>}
+        </div>
       </div>
     </form>
   )
