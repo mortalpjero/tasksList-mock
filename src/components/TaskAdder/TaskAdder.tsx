@@ -2,7 +2,7 @@ import React from "react";
 import TaskForm from "../TaskForm/TaskForm.tsx";
 import validation from '../../utils/validation.ts';
 
-const TaskAdder = () => {
+const TaskAdder: React.FC = () => {
   const formType = 'addTask';
 
   return (

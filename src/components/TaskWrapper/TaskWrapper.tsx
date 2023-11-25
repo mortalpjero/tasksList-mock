@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import useOutsideClick from "../../utils/useOutsideClick";
 import { setModal } from "../../slices/modalSlice";
 import { setTaskToEdit } from "../../slices/editTaskSlice";
-import { Root } from "react-dom/client";
 
 type Task = {
   id: number;

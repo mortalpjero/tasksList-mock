@@ -7,7 +7,7 @@ import { setTasks } from "../../slices/tasksSlice";
 import { useDispatch } from "react-redux";
 import Modal from "../Modal/Modal";
 
-const TaskListWrapper = () => {
+const TaskListWrapper: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getTasks()

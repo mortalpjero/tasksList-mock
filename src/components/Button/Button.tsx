@@ -1,15 +1,16 @@
 import React, { ReactNode } from "react";
 import classNames from "classnames";
 
-interface ButtonProps {
+type ButtonProps = {
   icon: React.ReactElement;
   type: 'addTask' | 'editTask' | 'actionIcon' | 'removeTask';
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   children?: ReactNode;
   specialClass?: string;
+  disabled?: boolean;
 }
 
-const Button: React.FC<ButtonProps> = ({ icon, type, onClick, children, specialClass }) => {
+const Button: React.FC<ButtonProps> = ({ icon, type, onClick, children, specialClass, disabled }) => {
   const buttonClasses = classNames(
     'text-white',
     'inline-flex',
@@ -25,6 +26,7 @@ const Button: React.FC<ButtonProps> = ({ icon, type, onClick, children, specialC
     type === 'editTask' ? 'bg-green-600 hover:bg-green-800 px-5 py-2.5' : '',
     type === 'removeTask' ? 'bg-red-600 hover:bg-red-700 px-5 py-2.5' : '',
     specialClass ? specialClass : '',
+    disabled ? 'opacity-50' : '',
   )
 
   const textClasses = classNames(
@@ -34,7 +36,7 @@ const Button: React.FC<ButtonProps> = ({ icon, type, onClick, children, specialC
   )
 
   return (
-    <button type={type === 'actionIcon' ? 'button' : 'submit'} className={buttonClasses} onClick={onClick}>
+    <button type={type === 'actionIcon' ? 'button' : 'submit'} disabled={disabled} className={buttonClasses} onClick={onClick}>
       <span>{icon}</span>
       <span className={textClasses}>{children}</span>
     </button>
