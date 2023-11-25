@@ -12,7 +12,7 @@ import { ReactComponent as BackIcon } from "../../images/back_icon.svg";
 import { ReactComponent as CrossIcon } from "../../images/cross_icon.svg";
 import useOutsideClick from "../../utils/useOutsideClick";
 
-const Modal = () => {
+const Modal: React.FC = () => {
   const dispatch = useDispatch();
   const ref = useRef(null);
   const modalType = useSelector((state: RootState) => state.modalsInfo.type);
