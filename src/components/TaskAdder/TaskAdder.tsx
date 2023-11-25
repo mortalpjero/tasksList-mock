@@ -1,6 +1,6 @@
 import React from "react";
 import TaskForm from "../TaskForm/TaskForm.tsx";
-import validation from '../../utils/validation.tsx';
+import validation from '../../utils/validation.ts';
 
 const TaskAdder = () => {
   const formType = 'addTask';

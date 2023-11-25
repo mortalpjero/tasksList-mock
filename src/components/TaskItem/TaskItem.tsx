@@ -3,7 +3,9 @@ import { useDispatch } from "react-redux";
 import { ReactComponent as DeleteIcon } from '../../images/delete_icon.svg';
 import { ReactComponent as EditIcon } from '../../images/edit_icon.svg';
 import Button from "../Button/Button";
-import { setTaskToEdit } from "../../slices/tasksSlice";
+import { setTaskToRemove } from "../../slices/tasksSlice";
+import { setTaskToEdit } from "../../slices/editTaskSlice";
+import { setModal } from "../../slices/modalSlice";
 
 type Task = {
   id: number;
@@ -15,8 +17,13 @@ type Task = {
 const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
   const dispatch = useDispatch()
   const { title, description } = task;
+
   const handleClickEditItem = () => {
     dispatch(setTaskToEdit(task))
+  };
+  const handleClickRemoveItem = () => {
+    dispatch(setTaskToRemove(task))
+    dispatch(setModal({ type: 'removeTask' }))
   };
 
   return (
@@ -28,7 +35,7 @@ const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
         </div>
         <div className="flex">
           <Button icon={<EditIcon className="text-blue-600" />} type="actionIcon" onClick={handleClickEditItem} />
-          <Button icon={<DeleteIcon className="text-red-500 h-8" />} type="actionIcon" />
+          <Button icon={<DeleteIcon className="text-red-500 h-8" />} type="actionIcon" onClick={handleClickRemoveItem} />
         </div>
       </div>
       <p className="text-gray-600 mt-4">{description}</p>

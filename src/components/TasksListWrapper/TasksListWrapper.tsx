@@ -5,12 +5,13 @@ import TaskContainer from "../TasksContainer/TasksContainer";
 import { getTasks } from "../../services/api";
 import { setTasks } from "../../slices/tasksSlice";
 import { useDispatch } from "react-redux";
+import Modal from "../Modal/Modal";
 
 const TaskListWrapper = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getTasks()
-      .then((data) => dispatch(setTasks(data)));
+      .then((data) => dispatch(setTasks(data.reverse())));
   }, [dispatch]);
 
   return (
@@ -18,7 +19,7 @@ const TaskListWrapper = () => {
       <TaskAdder />
       <Divider />
       <TaskContainer />
-      <Divider />
+      <Modal />
     </main>
   );
 };

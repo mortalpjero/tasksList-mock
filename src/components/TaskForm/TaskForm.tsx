@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import { Schema } from "yup";
 import { RootState } from "../../slices";
 import classNames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import { createTask, updateTask } from "../../services/api";
-import { addTaskToState, updateTaskInState, setTaskToEdit } from "../../slices/tasksSlice";
+import { addTaskToState, updateTaskInState } from "../../slices/tasksSlice";
+import { setTaskToEdit, setNewTitle, setNewDescription } from "../../slices/editTaskSlice";
 import Button from "../Button/Button";
 import { ReactComponent as AddIcon } from '../../images/add_icon.svg';
 import { ReactComponent as SaveIcon } from '../../images/save_icon.svg';
@@ -24,7 +25,19 @@ interface Values {
 
 const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   const dispatch = useDispatch();
-  const taskToEdit = useSelector((state: RootState) => state.tasksInfo.taskToEdit);
+  const ref = useRef(null);
+  const taskToEdit = useSelector((state: RootState) => state.editTaskInfo.taskToEdit);
+  const [updatedTitle, setUpdatedTitle] = useState(taskToEdit?.title);
+  const [updatedDescription, setUpdatedDescription] = useState(taskToEdit?.description)
+
+  useEffect(() => {
+    if (formType === 'editTask') {
+      if (updatedDescription && updatedTitle) {
+        dispatch(setNewDescription(updatedDescription));
+        dispatch(setNewTitle(updatedTitle));
+      }
+    }
+  }, [updatedTitle, updatedDescription, formType, dispatch])
 
   const handleAddChannelSubmit = (values: Values, resetForm: Function) => {
     if (values.taskTitle && values.taskDescription) {
@@ -61,7 +74,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
         .catch((error) => {
           console.error('Error changing task', error);
         })
-        dispatch(setTaskToEdit(null));
+      dispatch(setTaskToEdit(null));
     }
     else {
       console.error('Task name or description is not specified or task id is missing');
@@ -139,7 +152,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   )
 
   return (
-    <form className="p-4 md:p-5" onSubmit={handleSubmit}>
+    <form className="p-4 md:p-5" onSubmit={handleSubmit} ref={ref}>
       <div className="grid gap-4 mb-4 grid-cols-2">
         <div className="col-span-2">
           <label
@@ -156,7 +169,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             placeholder="Type the name of a task"
             required={true}
             value={taskTitle}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              if (formType === 'editTask') {
+                setUpdatedTitle(e.target.value);
+              }
+            }
+            }
           />
         </div>
         <div className="col-span-2">
@@ -173,13 +192,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             className={taskDescriptionClasses}
             placeholder="Write the description of a task"
             value={taskDescription}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              if (formType === 'editTask') {
+                setUpdatedDescription(e.target.value);
+              }
+            }
+            }
           />
         </div>
         {formType === 'addTask' && <Button type='addTask' icon={<AddIcon />}>Add New Task</Button>}
         {formType === 'editTask' && <Button type='editTask' icon={<SaveIcon />}>Save Changes</Button>}
       </div>
-      <></>
     </form>
   )
 };
