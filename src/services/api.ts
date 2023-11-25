@@ -23,9 +23,9 @@ const updateTask = (task: NewTask, id: Number) => {
     .then((response) => response.data);
 };
 
-const deleteTask = (id: Number) => {
+const removeTask = (id: Number) => {
   return axios.delete(`${API_URL}/${id}`)
     .then((response) => response.data);
 }
 
-export { createTask, updateTask, deleteTask, getTasks };
+export { createTask, updateTask, removeTask, getTasks };
