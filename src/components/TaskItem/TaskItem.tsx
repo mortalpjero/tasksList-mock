@@ -34,8 +34,8 @@ const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
           <h3 className="ml-2 text-xl font-semibold border-bottom">{title}</h3>
         </div>
         <div className="flex">
-          <Button icon={<EditIcon className="text-blue-600" />} type="actionIcon" onClick={handleClickEditItem} />
-          <Button icon={<DeleteIcon className="text-red-500 h-8" />} type="actionIcon" onClick={handleClickRemoveItem} />
+          <Button icon={<EditIcon className="text-blue-600" />} variant="actionIcon" type="button" onClick={handleClickEditItem} />
+          <Button icon={<DeleteIcon className="text-red-500 h-8" />} variant="actionIcon" type="button" onClick={handleClickRemoveItem} />
         </div>
       </div>
       <p className="text-gray-600 mt-4">{description}</p>

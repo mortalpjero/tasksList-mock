@@ -10,7 +10,9 @@ import { setTaskToEdit, setNewTitle, setNewDescription } from "../../slices/edit
 import Button from "../Button/Button";
 import { ReactComponent as AddIcon } from '../../images/add_icon.svg';
 import { ReactComponent as SaveIcon } from '../../images/save_icon.svg';
+import { ReactComponent as CancelIcon } from '../../images/cancel_icon.svg';
 import Error from "../Error/Error";
+import { setModal } from "../../slices/modalSlice";
 
 type TaskFormProps = {
   validation: Schema<any>;
@@ -32,7 +34,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   const [updatedDescription, setUpdatedDescription] = useState(taskToEdit?.description)
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     if (formType === 'editTask') {
@@ -97,6 +98,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
     }
   }
 
+  const handleDiscardClick = () => {
+    if (taskToEdit?.title !== updatedTitle || taskToEdit?.description !== updatedDescription) {
+      dispatch(setModal({type: 'discardChanges'}));
+    } else {
+      dispatch(setTaskToEdit(null));
+    }
+  }
 
   const genInitialValues = (): Values => {
     if (formType === 'editTask') {
@@ -223,9 +231,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
         <div className="item col-span-full">
           {errorMessage && <Error text={errorMessage} />}
         </div>
-        <div>
-          {formType === 'addTask' && <Button type='addTask' icon={<AddIcon />} disabled={isLoading}>Add New Task</Button>}
-          {formType === 'editTask' && <Button type='editTask' icon={<SaveIcon />} disabled={isLoading}>Save Changes</Button>}
+        <div className="flex item col-span-full">
+          {formType === 'addTask' && <Button variant='primary' icon={<AddIcon />} type={'submit'} disabled={isLoading}>Add New Task</Button>}
+          {formType === 'editTask' && <Button variant='secondary' icon={<SaveIcon />} type={'submit'} disabled={isLoading}>Save Changes</Button>}
+          {formType === 'editTask' && <Button variant='danger' icon={<CancelIcon />} type={'button'} disabled={isLoading} specialClass="ml-4" onClick={handleDiscardClick}>Discard</Button>}
         </div>
       </div>
     </form>

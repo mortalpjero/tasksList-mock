@@ -86,7 +86,7 @@ const Modal: React.FC = () => {
                 {modalType === 'discardChanges' && 'Are you sure you want to discard your changes?'}
                 {modalType === 'removeTask' && 'Are you sure you want to remove this task?'}
               </h3>
-              <Button type="actionIcon" icon={<CrossIcon />} onClick={handleClickBack} />
+              <Button variant="actionIcon" type="button" icon={<CrossIcon />} onClick={handleClickBack} />
             </div>
             <div className="p-4 md:p-5 space-y-4">
               <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
@@ -94,11 +94,11 @@ const Modal: React.FC = () => {
               </p>
             </div>
             <div className="flex border-2 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-              <Button type="removeTask" icon={<CancelIcon />} onClick={handlClickAffirmative}>
+              <Button variant="danger" type="button" icon={<CancelIcon />} onClick={handlClickAffirmative}>
                 {modalType === 'discardChanges' && 'Discard'}
                 {modalType === 'removeTask' && 'Remove'}
               </Button>
-              <Button specialClass="ml-4 md:ml-6" type="addTask" icon={<BackIcon />} onClick={handleClickBack}>Go back</Button>
+              <Button specialClass="ml-4 md:ml-6" variant="primary" type="button" icon={<BackIcon />} onClick={handleClickBack}>Go back</Button>
             </div>
           </div>
         </div>
