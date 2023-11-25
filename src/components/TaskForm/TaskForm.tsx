@@ -170,7 +170,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   )
 
   return (
-    <form className="p-4 md:p-5" onSubmit={handleSubmit} ref={ref}>
+    <form onSubmit={handleSubmit} ref={ref}>
       <div className="grid gap-4 mb-4 grid-cols-2">
         <div className="col-span-2">
           <label

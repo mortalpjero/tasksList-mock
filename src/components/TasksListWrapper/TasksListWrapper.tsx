@@ -15,7 +15,7 @@ const TaskListWrapper: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <main className="flex-grow px-5 md:px-20 lg:px-48 ">
+    <main className="flex-grow px-5 md:px-20 lg:px-72 ">
       <TaskAdder />
       <Divider />
       <TaskContainer />
