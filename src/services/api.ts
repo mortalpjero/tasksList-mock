@@ -5,7 +5,6 @@ const API_URL = 'https://jsonplaceholder.typicode.com/posts';
 type NewTask = {
   title: string,
   body: string,
-  completed: boolean,
 }
 
 const getTasks = () => {

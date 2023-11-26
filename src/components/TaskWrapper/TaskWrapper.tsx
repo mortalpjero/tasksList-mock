@@ -13,22 +13,21 @@ type Task = {
   id: number;
   title: string;
   body: string;
-  completed: boolean;
 }
 
 const TaskWrapper: React.FC<{ task: Task }> = ({ task }) => {
   const dispatch = useDispatch();
   const taskToEdit = useSelector((state: RootState) => state.editTaskInfo.taskToEdit);
   const newTitle = useSelector((state: RootState) => state.editTaskInfo.title);
-  const newbody = useSelector((state: RootState) => state.editTaskInfo.body);
+  const newBody = useSelector((state: RootState) => state.editTaskInfo.body);
   const ref = useRef(null);
 
   useOutsideClick(ref, () => {
     if (taskToEdit?.id === task.id) {
-      if (taskToEdit?.title === newTitle && taskToEdit?.body === newbody) {
+      if (taskToEdit?.title === newTitle && taskToEdit?.body === newBody) {
         dispatch(setTaskToEdit(null));
       }
-      if (taskToEdit?.title !== newTitle || taskToEdit?.body !== newbody) {
+      if (taskToEdit?.title !== newTitle || taskToEdit?.body !== newBody) {
         dispatch(setModal({ type: 'discardChanges' }));
       }
     }

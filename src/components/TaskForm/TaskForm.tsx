@@ -13,6 +13,7 @@ import { ReactComponent as SaveIcon } from '../../images/save_icon.svg';
 import { ReactComponent as CancelIcon } from '../../images/cancel_icon.svg';
 import Error from "../Error/Error";
 import { setModal } from "../../slices/modalSlice";
+import getNewId from "../../utils/getNewId";
 
 type TaskFormProps = {
   validation: Schema<any>;
@@ -23,13 +24,13 @@ interface Values {
   id?: number | undefined;
   taskTitle: string | undefined;
   taskBody: string | undefined;
-  completed: boolean;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   const dispatch = useDispatch();
   const ref = useRef(null);
   const taskToEdit = useSelector((state: RootState) => state.editTaskInfo.taskToEdit);
+  const allTasks = useSelector((state: RootState) => state.tasksInfo.tasks);
   const [updatedTitle, setUpdatedTitle] = useState(taskToEdit?.title);
   const [updatedBody, setUpdatedBody] = useState(taskToEdit?.body)
   const [isLoading, setIsLoading] = useState(false);
@@ -50,15 +51,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       const newTask = {
         title: values.taskTitle,
         body: values.taskBody,
-        completed: false,
       }
       createTask(newTask)
         .then((response) => {
+          response.id = allTasks.length + 1;
+          console.log(response);
           dispatch(addTaskToState(response));
           setErrorMessage('');
         })
         .catch((error) => {
-          console.log('error create');
           setErrorMessage(`Error creating task ${error}`);
         })
         .finally(() => {
@@ -77,7 +78,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       const changedTask = {
         title: values.taskTitle,
         body: values.taskBody,
-        completed: false,
       }
       updateTask(changedTask, taskToEdit.id)
         .then((response) => {
@@ -85,7 +85,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
           setErrorMessage('');
         })
         .catch((error) => {
-          console.log('error')
           setErrorMessage(`Error changing task ${error}`);
         })
         .finally(() => {
@@ -94,7 +93,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       dispatch(setTaskToEdit(null));
     }
     else {
-      console.error('Task name or description is not specified or task id is missing');
+      console.error('Task name or description is not specified');
     }
   }
 
@@ -111,10 +110,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       return {
         taskTitle: taskToEdit?.title,
         taskBody: taskToEdit?.body,
-        completed: taskToEdit?.completed || false
       };
     }
-    return { taskTitle: '', taskBody: '', completed: false };
+    return { taskTitle: '', taskBody: '' };
   };
   const initialValues = genInitialValues();
 
@@ -183,7 +181,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
         <div className="col-span-2">
           <label
             htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-sm text-lg font-bold text-gray-600 dark:text-white"
           >
             Task Name
           </label>
@@ -207,7 +205,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
         <div className="col-span-2">
           <label
             htmlFor="body"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            className="block mb-2 text-sm text-lg font-bold text-gray-600 dark:text-white"
           >
             Task Description
           </label>

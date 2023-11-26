@@ -4,7 +4,6 @@ type Task = {
   id: number;
   title: string;
   body: string;
-  completed: boolean;
 };
 
 const initialState = {
