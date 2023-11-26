@@ -13,14 +13,16 @@ const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
   const { title, body } = task;
 
   const handleClickEditItem = () => {
-    if (task.id !== undefined) {
+    if (task.id) {
       dispatch(setTaskToEdit(task))
     }
   };
 
   const handleClickRemoveItem = () => {
-    dispatch(setTaskToRemove(task))
-    dispatch(setModal({ type: 'removeTask' }))
+    if (task.id) {
+      dispatch(setTaskToRemove(task));
+      dispatch(setModal({ type: 'removeTask' }));
+    };
   };
 
   return (
