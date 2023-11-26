@@ -1,7 +1,7 @@
 # Tasks List Mock
 
 ## Live view:
-https://tasks-list-mock-hchn5k9re-mortalpjero.vercel.app/
+https://tasks-list-mock.vercel.app/
 
 ## Available Scripts
 
