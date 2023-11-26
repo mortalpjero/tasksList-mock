@@ -77,13 +77,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
       }
       updateTask(changedTask, taskToEdit.id)
         .then((response) => {
-          console.log(response);
           response.id = taskToEdit.id;
           dispatch(updateTaskInState(response));
           setErrorMessage('');
         })
         .catch((error) => {
           setErrorMessage(`Error changing task ${error}`);
+          alert('Unable to change the Task');
         })
         .finally(() => {
           setIsLoading(false);

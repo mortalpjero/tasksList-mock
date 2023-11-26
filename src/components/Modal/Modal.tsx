@@ -32,8 +32,8 @@ const Modal: React.FC = () => {
     if (modalType === 'removeTask') {
       if (taskToRemove) {
         removeTask(taskToRemove?.id)
-          .catch((error) => {
-            console.error('Error creating task', error);
+          .catch(() => {
+            alert('Error removing the task');
           });
         dispatch(removeTaskFromState({ id: taskToRemove?.id }));
         dispatch(setTaskToRemove(null));
