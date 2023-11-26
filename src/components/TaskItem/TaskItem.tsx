@@ -10,13 +10,13 @@ import { setModal } from "../../slices/modalSlice";
 type Task = {
   id: number;
   title: string;
-  description: string;
+  body: string;
   completed: boolean;
 }
 
 const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
   const dispatch = useDispatch()
-  const { title, description } = task;
+  const { title, body } = task;
 
   const handleClickEditItem = () => {
     dispatch(setTaskToEdit(task))
@@ -38,7 +38,7 @@ const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
           <Button icon={<DeleteIcon className="text-red-500 h-8" />} variant="actionIcon" type="button" onClick={handleClickRemoveItem} />
         </div>
       </div>
-      <p className="text-gray-600 mt-4">{description}</p>
+      <p className="text-gray-600 mt-4 pr-4">{body}</p>
     </div >
   )
 };

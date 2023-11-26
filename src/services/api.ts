@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_URL = 'http://localhost:3000/todos';
+const API_URL = 'https://jsonplaceholder.typicode.com/posts';
 
 type NewTask = {
   title: string,
-  description: string,
+  body: string,
   completed: boolean,
 }
 

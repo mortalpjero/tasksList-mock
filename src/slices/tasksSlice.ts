@@ -3,7 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 type Task = {
   id: number;
   title: string;
-  description: string;
+  body: string;
   completed: boolean;
 };
 

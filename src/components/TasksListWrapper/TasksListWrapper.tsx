@@ -11,7 +11,7 @@ const TaskListWrapper: React.FC = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getTasks()
-      .then((data) => dispatch(setTasks(data.reverse())));
+      .then((data) => dispatch(setTasks(data)));
   }, [dispatch]);
 
   return (

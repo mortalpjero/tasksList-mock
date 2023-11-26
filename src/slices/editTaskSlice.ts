@@ -3,14 +3,14 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 type Task = {
   id: number;
   title: string;
-  description: string;
+  body: string;
   completed: boolean;
 };
 
 const initialState = {
   taskToEdit: null as Task | null,
   title: null as string | null,
-  description: null as string | null,
+  body: null as string | null,
 };
 
 const editTaskSlice = createSlice({
@@ -20,8 +20,8 @@ const editTaskSlice = createSlice({
     setNewTitle: (state, action: PayloadAction<string | null>) => {
       state.title = action.payload;
     },
-    setNewDescription: (state, action: PayloadAction<string | null>) => {
-      state.description = action.payload;
+    setNewBody: (state, action: PayloadAction<string | null>) => {
+      state.body = action.payload;
     },
     setTaskToEdit: (state, action: PayloadAction<Task | null>) => {
       state.taskToEdit = action.payload;
@@ -31,7 +31,7 @@ const editTaskSlice = createSlice({
 
 export const {
   setNewTitle,
-  setNewDescription,
+  setNewBody,
   setTaskToEdit
 } = editTaskSlice.actions;
 

@@ -12,7 +12,7 @@ import { setTaskToEdit } from "../../slices/editTaskSlice";
 type Task = {
   id: number;
   title: string;
-  description: string;
+  body: string;
   completed: boolean;
 }
 
@@ -20,15 +20,15 @@ const TaskWrapper: React.FC<{ task: Task }> = ({ task }) => {
   const dispatch = useDispatch();
   const taskToEdit = useSelector((state: RootState) => state.editTaskInfo.taskToEdit);
   const newTitle = useSelector((state: RootState) => state.editTaskInfo.title);
-  const newDescription = useSelector((state: RootState) => state.editTaskInfo.description);
+  const newbody = useSelector((state: RootState) => state.editTaskInfo.body);
   const ref = useRef(null);
 
   useOutsideClick(ref, () => {
     if (taskToEdit?.id === task.id) {
-      if (taskToEdit?.title === newTitle && taskToEdit?.description === newDescription) {
+      if (taskToEdit?.title === newTitle && taskToEdit?.body === newbody) {
         dispatch(setTaskToEdit(null));
       }
-      if (taskToEdit?.title !== newTitle || taskToEdit?.description !== newDescription) {
+      if (taskToEdit?.title !== newTitle || taskToEdit?.body !== newbody) {
         dispatch(setModal({ type: 'discardChanges' }));
       }
     }

@@ -5,7 +5,10 @@ import TaskWrapper from "../TaskWrapper/TaskWrapper";
 
 const TaskContainer: React.FC = () => {
   const tasks = useSelector((state: RootState) => state.tasksInfo.tasks);
-  if (tasks === null) return;
+  if (tasks.length <= 0) {
+    return null;
+  };
+
   const constructedTasks = tasks.map((task) => <TaskWrapper key={task.id} task={task} />);
 
   return (
