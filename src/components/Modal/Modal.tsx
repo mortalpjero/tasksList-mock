@@ -80,20 +80,20 @@ const Modal: React.FC = () => {
         className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
       >
         <div className="relative p-10 w-full max-w-2xl max-h-full">
-          <div className="relative bg-blue-50 rounded-lg shadow dark:bg-gray-700" ref={ref}>
-            <div className="flex items-center justify-between p-4 md:p-5 rounded-t dark:border-gray-600">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white pr-3">
+          <div className="relative bg-blue-50 rounded-lg shadow" ref={ref}>
+            <div className="flex items-center justify-between p-4 md:p-5 rounded-t">
+              <h3 className="text-xl font-semibold text-gray-900 pr-3">
                 {modalType === 'discardChanges' && 'Are you sure you want to discard your changes?'}
                 {modalType === 'removeTask' && 'Are you sure you want to remove this task?'}
               </h3>
               <Button variant="actionIcon" type="button" icon={<CrossIcon />} onClick={handleClickBack} />
             </div>
             <div className="p-4 md:p-5 space-y-4">
-              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+              <p className="text-base leading-relaxed text-gray-500">
                 Once you click the red button, there is no way back
               </p>
             </div>
-            <div className="flex border-2 p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+            <div className="flex border-2 p-4 md:p-5 border-t border-gray-200 rounded-b">
               <Button variant="danger" type="button" icon={<CancelIcon />} onClick={handlClickAffirmative}>
                 {modalType === 'discardChanges' && 'Discard'}
                 {modalType === 'removeTask' && 'Remove'}

@@ -142,12 +142,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
     'block',
     'w-full',
     'p-2',
-    'dark:bg-gray-600',
-    'dark:border-gray-500',
-    'dark:placeholder-gray-400',
-    'dark:text-white',
-    'dark:focus:ring-primary-500',
-    'dark:focus:border-primary-500',
     touched.title && errors.title ? 'border-red-200' : 'bg-gray-50',
   )
 
@@ -162,12 +156,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
     'border-gray-300',
     'focus:ring-blue-500',
     'focus:border-blue-500',
-    'dark:bg-gray-600',
-    'dark:border-gray-500',
-    'dark:placeholder-gray-400',
-    'dark:text-white',
-    'dark:focus:ring-blue-500',
-    'dark:focus:border-blue-500',
     'overflow-hidden',
     'overflow-ellipsis',
     touched.body && errors.body ? 'border-red-200' : 'bg-gray-50',
@@ -179,7 +167,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
         <div className="col-span-2">
           <label
             htmlFor="name"
-            className="block mb-2 text-sm text-lg font-bold text-gray-600 dark:text-white"
+            className="block mb-2 text-sm text-lg font-bold text-gray-600"
           >
             Task Name
           </label>
@@ -203,7 +191,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
         <div className="col-span-2">
           <label
             htmlFor="body"
-            className="block mb-2 text-sm text-lg font-bold text-gray-600 dark:text-white"
+            className="block mb-2 text-sm text-lg font-bold text-gray-600"
           >
             Task Description
           </label>
