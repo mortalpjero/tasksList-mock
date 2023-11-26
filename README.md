@@ -2,7 +2,6 @@
 
 ## Live view:
 https://tasks-list-mock.vercel.app/
-https://4.vercel.app/github/issues/:owner/:repo
 
 ## Available Scripts
 
