@@ -14,17 +14,13 @@ import { ReactComponent as CancelIcon } from '../../images/cancel_icon.svg';
 import Error from "../Error/Error";
 import { setModal } from "../../slices/modalSlice";
 import getNewId from "../../utils/getNewId";
+import { Task } from "../../types/Task";
+import { Values } from "../../types/Values";
 
 type TaskFormProps = {
   validation: Schema<any>;
   formType: string;
 };
-
-interface Values {
-  id?: number | undefined;
-  taskTitle: string | undefined;
-  taskBody: string | undefined;
-}
 
 const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   const dispatch = useDispatch();
@@ -46,15 +42,15 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   }, [updatedTitle, updatedBody, formType, dispatch])
 
   const handleAddChannelSubmit = (values: Values, resetForm: Function) => {
-    if (values.taskTitle && values.taskBody) {
+    if (values.title && values.body) {
       setIsLoading(true);
       const newTask = {
-        title: values.taskTitle,
-        body: values.taskBody,
+        title: values.title,
+        body: values.body,
       }
       createTask(newTask)
         .then((response) => {
-          response.id = allTasks.length + 1;
+          response.id = getNewId(allTasks);
           console.log(response);
           dispatch(addTaskToState(response));
           setErrorMessage('');
@@ -73,14 +69,16 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   }
 
   const handleEditChannelSubmit = (values: Values) => {
-    if (values.taskTitle && values.taskBody && taskToEdit?.id) {
+    if (values.title && values.body && taskToEdit?.id) {
       setIsLoading(true);
       const changedTask = {
-        title: values.taskTitle,
-        body: values.taskBody,
+        title: values.title,
+        body: values.body,
       }
       updateTask(changedTask, taskToEdit.id)
         .then((response) => {
+          console.log(response);
+          response.id = taskToEdit.id;
           dispatch(updateTaskInState(response));
           setErrorMessage('');
         })
@@ -106,13 +104,13 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   }
 
   const genInitialValues = (): Values => {
-    if (formType === 'editTask') {
+    if (formType === 'editTask' && taskToEdit) {
       return {
-        taskTitle: taskToEdit?.title,
-        taskBody: taskToEdit?.body,
+        title: taskToEdit.title,
+        body: taskToEdit.body,
       };
     }
-    return { taskTitle: '', taskBody: '' };
+    return { title: '', body: '' };
   };
   const initialValues = genInitialValues();
 
@@ -131,7 +129,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
   })
 
   const { handleChange, handleSubmit, errors, touched } = formik;
-  const { taskTitle, taskBody } = formik.values;
+  const { title, body } = formik.values;
 
   const taskTitleClasses = classNames(
     'border',
@@ -150,7 +148,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
     'dark:text-white',
     'dark:focus:ring-primary-500',
     'dark:focus:border-primary-500',
-    touched.taskTitle && errors.taskTitle ? 'border-red-200' : 'bg-gray-50',
+    touched.title && errors.title ? 'border-red-200' : 'bg-gray-50',
   )
 
   const taskBodyClasses = classNames(
@@ -172,7 +170,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
     'dark:focus:border-blue-500',
     'overflow-hidden',
     'overflow-ellipsis',
-    touched.taskBody && errors.taskBody ? 'border-red-200' : 'bg-gray-50',
+    touched.body && errors.body ? 'border-red-200' : 'bg-gray-50',
   )
 
   return (
@@ -187,11 +185,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
           </label>
           <input
             type="text"
-            name="taskTitle"
+            name="title"
             id="name"
             className={taskTitleClasses}
             placeholder="Type the name of a task"
-            value={taskTitle}
+            value={title}
             onChange={(e) => {
               handleChange(e);
               if (formType === 'editTask') {
@@ -200,7 +198,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             }
             }
           />
-          {errors.taskTitle && touched.taskTitle && <Error text={errors.taskTitle} />}
+          {errors.title && touched.title && <Error text={errors.title} />}
         </div>
         <div className="col-span-2">
           <label
@@ -212,10 +210,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
           <textarea
             id="body"
             rows={4}
-            name='taskBody'
+            name='body'
             className={taskBodyClasses}
             placeholder="Write the description of a task"
-            value={taskBody}
+            value={body}
             onChange={(e) => {
               handleChange(e);
               if (formType === 'editTask') {
@@ -224,7 +222,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ validation, formType }) => {
             }
             }
           />
-          {errors.taskBody && touched.taskBody && <Error text={errors.taskBody} />}
+          {errors.body && touched.body && <Error text={errors.body} />}
         </div>
         <div className="item col-span-full">
           {errorMessage && <Error text={errorMessage} />}

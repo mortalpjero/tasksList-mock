@@ -1,9 +1,9 @@
 import * as Yup from 'yup';
 
 const taskSchema = Yup.object().shape({
-  taskTitle: Yup.string()
+  title: Yup.string()
     .required('This filed is required'),
-  taskBody: Yup.string()
+  body: Yup.string()
     .required('This filed is required'),
 });
 

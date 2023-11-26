@@ -6,20 +6,18 @@ import Button from "../Button/Button";
 import { setTaskToRemove } from "../../slices/tasksSlice";
 import { setTaskToEdit } from "../../slices/editTaskSlice";
 import { setModal } from "../../slices/modalSlice";
-
-type Task = {
-  id: number;
-  title: string;
-  body: string;
-}
+import { Task } from "../../types/Task";
 
 const TaskItem: React.FC<{ task: Task }> = ({ task }) => {
   const dispatch = useDispatch()
   const { title, body } = task;
 
   const handleClickEditItem = () => {
-    dispatch(setTaskToEdit(task))
+    if (task.id !== undefined) {
+      dispatch(setTaskToEdit(task))
+    }
   };
+
   const handleClickRemoveItem = () => {
     dispatch(setTaskToRemove(task))
     dispatch(setModal({ type: 'removeTask' }))
